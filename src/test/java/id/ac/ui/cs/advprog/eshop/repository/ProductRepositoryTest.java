@@ -88,6 +88,24 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void testEditProductWithNullId() {
+        // Test: Edit an existing product with a null id
+        Product product = new Product();
+        product.setProductName("A super cool limited edition product");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId(null);
+        updatedProduct.setProductName("An ultra lame unlimited edition product");
+        updatedProduct.setProductQuantity(200);
+
+        // Expected: Returns null when trying to edit the product
+        Product result = productRepository.edit(updatedProduct);
+        assertNull(result);
+    }
+
+    @Test
     void testEditNonExistentProduct() {
         // Test: Attempt to edit a product that doesn't exist
         Product updatedProduct = new Product();
