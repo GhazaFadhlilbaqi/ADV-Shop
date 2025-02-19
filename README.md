@@ -1,4 +1,5 @@
 # Advanced Programming Tutorial & Assignments
+## [App Link](https://exotic-ediva-advprog-838212d6.koyeb.app/)
 ## Muhammad Ghaza Fadhlilbaqi - 2306173321
 ### Reflection 1
 > You already implemented two new features using Spring Boot. Check again your source code and evaluate the coding standards that you have learned in this module. Write clean code principles and secure coding practices that have been applied to your code.  If you find any mistake in your source code, please explain how to improve your code.
@@ -22,3 +23,12 @@ Suppose i made a new functional test suite for verifying product list items, I t
 
 I think creating a base test class (for example ```BaseFunctionalTest```) that contains all the common setup code and helper methods, such as setting the base product name and quantity. Then all the following functional tests could extend this base class. This would make the code more maintainable and reduce duplication. Another improvement could be creating helper methods for common operations like ```createProduct``` or ```editProduct``` that could be reused across different test classes.
 
+# Module 2
+### Reflection
+> List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them.
+
+After integrating SonarQube to my project, several code quality issues were discovered that needed fixing. The most notable issue was in `EshopApplicationTest`, where the test methods lacked proper assertions, which I fixed by implementing `assertDoesNotThrow` to verify the application's startup behavior. I also addressed code organization in `build.gradle.kts` by properly grouping the dependencies based on their usage. Additionally, I improved the maintainability of my test files by ensuring each test method has clear assertions and verifies specific behaviors. These improvements helped make the codebase more reliable and easier to maintain, while also improving our SonarQube quality metrics.
+
+>Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!
+
+For Continuous Integration, my GitHub Actions workflow has implemented it by automatically building and testing the code on every push, including running the test suite and SonarQube analysis. The workflow ensures code quality through automated testing and maintains consistent integration of new changes. For Continuous Deployment, I personally didn't implement it using a script, as the deployment platform I have chosen (```Koyeb```) as a feature for autodeployment built in it when we first set up the github repo we plan on deploying.
