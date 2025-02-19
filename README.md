@@ -27,7 +27,8 @@ I think creating a base test class (for example ```BaseFunctionalTest```) that c
 ### Reflection
 > List the code quality issue(s) that you fixed during the exercise and explain your strategy on fixing them.
 
-After integrating SonarQube to my project, several code quality issues were discovered that needed fixing. The most notable issue was in `EshopApplicationTest`, where the test methods lacked proper assertions, which I fixed by implementing `assertDoesNotThrow` to verify the application's startup behavior. I also addressed code organization in `build.gradle.kts` by properly grouping the dependencies based on their usage. Additionally, I improved the maintainability of my test files by ensuring each test method has clear assertions and verifies specific behaviors. These improvements helped make the codebase more reliable and easier to maintain, while also improving our SonarQube quality metrics.
+After integrating SonarQube to my project, several code quality issues were discovered that needed fixing. The most notable issue was in `EshopApplicationTest`, where the test methods lacked proper assertions, which I fixed by implementing `assertDoesNotThrow` to verify the application's startup behavior. I also addressed code organization in `build.gradle.kts` by properly grouping the dependencies based on their usage. I chose to fix these issues since there are a bundle of them, so it allows me to clear about 5 issues out of the 12 issues present in my code (see image). These improvements helped make the codebase more reliable and easier to maintain, while also improving our SonarQube quality metrics.
+![Issue Fix Proof](src/main/resources/static/images/IssueFixImg.png)
 
 >Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!
 
