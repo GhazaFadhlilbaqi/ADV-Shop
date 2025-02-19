@@ -29,7 +29,7 @@ class CreateProductFunctionalTest {
     }
 
     @Test
-    void testCreateProduct_Successful(ChromeDriver driver) throws Exception {
+    void testCreateProduct_Successful(ChromeDriver driver) {
         // Test: Create a new product with valid name and quantity
         driver.get(baseUrl + "/product/create");
 
@@ -51,7 +51,7 @@ class CreateProductFunctionalTest {
     }
 
     @Test
-    void testCreateProduct_emptyNameError(ChromeDriver driver) throws Exception {
+    void testCreateProduct_emptyNameError(ChromeDriver driver) {
         // Test: Create a new product with empty name
         driver.get(baseUrl + "/product/create");
         
@@ -66,7 +66,7 @@ class CreateProductFunctionalTest {
     }
 
     @Test
-    void testCreateProduct_negativeQuantityError(ChromeDriver driver) throws Exception {
+    void testCreateProduct_negativeQuantityError(ChromeDriver driver) {
         // Test: Create a new product with negative quantity
         driver.get(baseUrl + "/product/create");
         
