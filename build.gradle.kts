@@ -45,17 +45,19 @@ dependencies {
 
 	// Lombok for code reduction
 	compileOnly("org.projectlombok:lombok")
+	
 	annotationProcessor("org.projectlombok:lombok")
 
 	// Dev tools
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	// Testing dependencies
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	// Selenium and WebDriver Manager for UI tests
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
 	testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
 	testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
