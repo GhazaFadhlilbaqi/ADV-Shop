@@ -45,7 +45,7 @@ dependencies {
 
 	// Lombok for code reduction
 	compileOnly("org.projectlombok:lombok")
-	
+
 	annotationProcessor("org.projectlombok:lombok")
 
 	// Dev tools
