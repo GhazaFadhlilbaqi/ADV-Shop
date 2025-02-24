@@ -2,8 +2,6 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
-import id.ac.ui.cs.advprog.eshop.controller.ProductController;
-import id.ac.ui.cs.advprog.eshop.service.CarService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +23,6 @@ class ProductControllerTest {
 
     @MockBean
     private ProductService productService;
-
-    @MockBean
-    private ProductController.CarController
-    carController;
-
-    @MockBean
-    private CarService carService;
 
     private Product product;
 
