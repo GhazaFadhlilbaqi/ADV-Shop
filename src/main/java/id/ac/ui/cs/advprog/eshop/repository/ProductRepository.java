@@ -31,9 +31,10 @@ public class ProductRepository {
 
     public Product edit(Product updatedProduct) {
         for (int i = 0; i < productData.size(); i++) {
-            if (productData.get(i).getProductId().equals(updatedProduct.getProductId())) {
-                productData.set(i, updatedProduct);
-                return updatedProduct;
+            Product product = productData.get(i);
+            if (product.getProductId().equals(updatedProduct.getProductId())) {
+                product.update(updatedProduct); // Modified to follow OCP
+                return product;
             }
         }
         return null;
