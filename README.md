@@ -33,3 +33,38 @@ After integrating SonarQube to my project, several code quality issues were disc
 >Look at your CI/CD workflows (GitHub)/pipelines (GitLab). Do you think the current implementation has met the definition of Continuous Integration and Continuous Deployment? Explain the reasons (minimum 3 sentences)!
 
 For Continuous Integration, my GitHub Actions workflow has implemented it by automatically building and testing the code on every push, including running the test suite and SonarQube analysis. The workflow ensures code quality through automated testing and maintains consistent integration of new changes. For Continuous Deployment, I personally didn't implement it using a script, as the deployment platform I have chosen (```Koyeb```) as a feature for autodeployment built in it when we first set up the github repo we plan on deploying.
+
+# Module 3
+### Reflection
+>Apply the SOLID principles you have learned. You are allowed to modify the source code according to the principles you want to implement. Please answer the following questions:
+> 1) Explain what principles you apply to your project!
+
+The project applies four SOLID principles:
+
+```Single Responsibility Principle``` - Breaking up controllers by what they manage. ```CarController``` handles car stuff while ```ProductController``` deals with products. This way, changes to one part won't mess up the other parts.
+
+```Open-Closed Principle``` - Putting update logic in the model classes instead of repositories. Both ```Product``` and ```Car``` have their own ```update()``` methods that repositories call instead of directly changing stuff. This lets us extend behavior without touching repository code.
+
+```Interface Segregation Principle``` - Making smaller, focused interfaces instead of big ones. Having separate ```ProductService``` and ```CarService``` interfaces means classes only need to implement what they actually use.
+
+```Dependency Inversion Principle``` - Using Spring's dependency injection so code depends on interfaces, not concrete classes. Controllers work with service interfaces instead of creating service objects directly.
+
+> 2) Explain the advantages of applying SOLID principles to your project with examples.
+
+**Improved Maintenance**: When issues arise in the car functionality, only the ```CarController``` needs to be checked without risk of affecting product-related code.
+
+**Easier Feature Addition**: Adding validation for products (like verifying quantities to be postive numebrs) only requires modifying the ```Product.update()``` method. Repository code remains unchanged, reducing regression risks.
+
+**Simpler Testing**: With separate interfaces, writing tests becomes much more manageable. When testing ```ProductServiceImpl```, I can focus just on product functionality without having to mock or deal with any car-related methods.
+
+**Component Replaceability**: Changing how products are stored (like switching to a database) only requires creating a new repository implementation. The controllers remain unaffected by these implementation details.
+
+> 3) Explain the disadvantages of not applying SOLID principles to your project with examples.
+
+**Code Entanglement**: Without proper separation, a single controller would handle multiple items. Finding bugs would require sorting through unrelated car code.
+
+**Difficult Modifications**: Without OCP, adding simple validation would require changing repository code directly, potentially causing unexpected issues across the system.
+
+**Interface Bloat**: A generic ```ItemService``` interface would force product services to implement unnecessary car-related methods. This creates extra complexity and implementation burden.
+
+**Challenging Testing**: When controllers directly instantiate services with ```new ProductServiceImpl()```, substituting test implementations becomes difficult. This complicates testing and makes the system more rigid.
