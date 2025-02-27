@@ -3,31 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Create New Car</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERd`knLPMO" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/stylesheet.css" rel="stylesheet">
 </head>
 <body>
-
-<div class="container">
-    <h3>Create New Car</h3>
-
-    <form th:action="@{/car/createCar}" th:object="${car}" method="post">
-        <div class="form-group">
-            <label for="nameInput">Name</label>
-            <input th:field="*{carName}" type="text" class="form-control mb-4 col-4" id="nameInput" placeholder="Enter car' name">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">ADV Shop</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product/list">Product List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product/create">Create Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/car/listCar">Car List</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/car/createCar">Create Car</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="colorInput">Color</label>
-            <input th:field="*{carColor}" type="text" class="form-control mb-4 col-4" id="colorInput" placeholder="Enter car' color">
-        </div>
-        <div class="form-group">
-            <label for="quantityInput">Quantity</label>
-            <input th:field="*{carQuantity}" type="text" class="form-control mb-4 col-4" id="quantityInput" placeholder="Enter car' quantity">
-        </div>
+    </nav>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-</div>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Create New Car</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/car/createCar}" th:object="${car}" method="post">
+                    <div class="form-group">
+                        <label for="nameInput">Car Name</label>
+                        <input th:field="*{carName}" type="text" class="form-control" id="nameInput" 
+                               required minlength="1" placeholder="Enter car name">
+                    </div>
+                    <div class="form-group">
+                        <label for="colorInput">Color</label>
+                        <input th:field="*{carColor}" type="text" class="form-control" id="colorInput" 
+                               required minlength="1" placeholder="Enter car color">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantityInput">Quantity</label>
+                        <input th:field="*{carQuantity}" type="number" class="form-control" id="quantityInput" 
+                               required min="0" placeholder="Enter quantity">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Car</button>
+                    <a href="/car/listCar" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </body>
 </html>

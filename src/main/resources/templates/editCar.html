@@ -1,36 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <title>Edit Car</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/stylesheet.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-<div class="container mx-auto mt-8">
-    <h1 class="text-3xl font-bold mb-4">Edit Car</h1>
-
-    <form th:action="@{/car/editCar}" method="post" th:object="${car}" class="max-w-md bg-white p-6 rounded-md shadow-md">
-        <input type="hidden" th:field="*{carId}" />
-        <div class="mb-4">
-            <label for="carName" class="block text-sm font-medium text-gray-600">Car Name</label>
-            <input type="text" id="carName" th:field="*{carName}" name="carName" th:value="${car.carName}" class="mt-1 p-2 w-full border rounded-md">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">ADV Shop</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product/list">Product List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product/create">Create Product</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/car/listCar">Car List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/car/createCar">Create Car</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        <div class="mb-4">
-            <label for="carColor" class="block text-sm font-medium text-gray-600">Car Color</label>
-            <input th:field="*{carColor}" type="text" id="carColor" name="carQuantity" th:value="${car.carColor}" class="mt-1 p-2 w-full border rounded-md">
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header"></div>
+                <h3 class="card-title">Edit Car</h3>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/car/editCar}" th:object="${car}" method="post">
+                    <input type="hidden" th:field="*{carId}">
+                    <div class="form-group">
+                        <label for="carName">Car Name</label>
+                        <input th:field="*{carName}" type="text" class="form-control" id="carName" 
+                               required minlength="1" placeholder="Enter car name">
+                    </div>
+                    <div class="form-group">
+                        <label for="carColor">Car Color</label>
+                        <input th:field="*{carColor}" type="text" class="form-control" id="carColor" 
+                               required minlength="1" placeholder="Enter car color">
+                    </div>
+                    <div class="form-group">
+                        <label for="carQuantity">Car Quantity</label>
+                        <input th:field="*{carQuantity}" type="number" class="form-control" id="carQuantity" 
+                               required min="0" placeholder="Enter quantity">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Car</button>
+                    <a href="/car/listCar" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
         </div>
+    </div>
 
-        <div class="mb-4">
-            <label for="carQuantity" class="block text-sm font-medium text-gray-600">Car Quantity</label>
-            <input th:field="*{carQuantity}" type="number" id="carQuantity" name="carQuantity" th:value="${car.carQuantity}" class="mt-1 p-2 w-full border rounded-md">
-        </div>
-
-        <div class="flex justify-end">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Save Changes</button>
-        </div>
-    </form>
-</div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </body>
 </html>
