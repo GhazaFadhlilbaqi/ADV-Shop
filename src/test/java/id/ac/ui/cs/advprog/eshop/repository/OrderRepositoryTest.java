@@ -67,8 +67,8 @@ class OrderRepositoryTest {
             orderRepository.save(order);
         }
         Order findResult = orderRepository.findById(orders.get(1).getId());
-        assertEquals(orders.get(1).getId(), findREsult.getId());
-        assertEquals(orders.get(1).getOrderTime(), findREsult.getOrderTime());
+        assertEquals(orders.get(1).getId(), findResult.getId());
+        assertEquals(orders.get(1).getOrderTime(), findResult.getOrderTime());
         assertEquals(orders.get(1).getAuthor(), findResult.getAuthor());
         assertEquals(orders.get(1).getStatus(), findResult.getStatus());
     }
