@@ -68,3 +68,21 @@ The project applies four SOLID principles:
 **Interface Bloat**: A generic ```ItemService``` interface would force product services to implement unnecessary car-related methods. This creates extra complexity and implementation burden.
 
 **Challenging Testing**: When controllers directly instantiate services with ```new ProductServiceImpl()```, substituting test implementations becomes difficult. This complicates testing and makes the system more rigid.
+
+# Module 4
+### Reflection
+>Reflect based on Percival (2017) proposed self-reflective questions (in “Principles and Best Practice of Testing” submodule, chapter “Evaluating Your Testing Objectives”), whether this TDD flow is useful enough for you or not. If not, explain things that you need to do next time you make more tests.
+
+In my opinion, the Test Driven Development flow has it's ups and downs. On one hand, if we have a clear idea on the project we are going to make, using the TDD workflow allows us to test several input scenarios for the features. That would allow us to constantly evaluate if our code is correct or not, saving us the trouble of having issues later down the line. On the otherhand, writing up tests without knowing what we are going to build could waste more time, since we have to think of the technical aspects of the feature in the tests without having the actual features.
+
+>You have created unit tests in Tutorial. Now reflect whether your tests have successfully followed F.I.R.S.T. principle or not. If not, explain things that you need to do the next time you create more tests.
+
+For the F (FAST) aspect, I am still unsure since my tests are only conducted on a small scale, and I am not certain whether they would be considered fast when compared to running thousands of unit tests.
+
+For the I (Isolated) aspect, I believe my tests adhere to this principle, as each test runs independently without affecting others.
+
+For the R (Repeatable) aspect, the tests I created are not dependent on the environment in which they are executed and use independent data, meaning they already align with this principle.
+
+For the S (Self-validating) aspect, the tests are fully automated and can be executed in IntelliJ, eliminating the need for manual validation of their results.
+
+For the T (Timely) aspect, I recognize that not all cases are covered. In the future, if I have more time, I will work on making more tests to ensure all scenarios are properly tested.
