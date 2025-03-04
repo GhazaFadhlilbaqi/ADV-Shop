@@ -21,7 +21,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
@@ -60,80 +59,97 @@ public class PaymentServiceImplTest {
         // Setup payment data maps
         Map<String, String> validVoucherData = new HashMap<>();
         validVoucherData.put("voucherCode", "ESHOP80235gh021f");
-        
+
         Map<String, String> invalidVoucherData = new HashMap<>();
         invalidVoucherData.put("voucherCode", "ZCZCW08255L18Assignment#08:Trydemos,runscripts,doLFSchapter1-5");
-        
+
         Map<String, String> validBankData = new HashMap<>();
         validBankData.put("bankName", "Bank Ajarin Dong Bank");
         validBankData.put("referenceCode", "ea5f7b695ec97579a6f5e767ea5f9");
 
         // Setup test payments
         this.payments = new ArrayList<>();
-        
-        Payment payment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b", 
-                PaymentMethod.VOUCHER.getDisplayName(), 
-                PaymentStatus.SUCCESS.getDisplayName(), 
+
+        Payment payment1 = new Payment("13652556-012a-4c07-b546-54eb1396d79b",
+                PaymentMethod.VOUCHER.getDisplayName(),
+                PaymentStatus.SUCCESS.getDisplayName(),
                 validVoucherData);
-                
-        Payment payment2 = new Payment("7f915bb-4b15-42f4-aebc-c3af385fb078", 
-                PaymentMethod.VOUCHER.getDisplayName(), 
-                PaymentStatus.REJECTED.getDisplayName(), 
+
+        Payment payment2 = new Payment("7f915bb-4b15-42f4-aebc-c3af385fb078",
+                PaymentMethod.VOUCHER.getDisplayName(),
+                PaymentStatus.REJECTED.getDisplayName(),
                 invalidVoucherData);
-                
-        Payment payment3 = new Payment("e334ef40-9eff-4da8-9487-8ee697ecbf1e", 
-                PaymentMethod.CASH_ON_DELIVERY.getDisplayName(), 
-                PaymentStatus.SUCCESS.getDisplayName(), 
+
+        Payment payment3 = new Payment("e334ef40-9eff-4da8-9487-8ee697ecbf1e",
+                PaymentMethod.CASH_ON_DELIVERY.getDisplayName(),
+                PaymentStatus.SUCCESS.getDisplayName(),
                 validBankData);
-                
+
         payments.add(payment1);
         payments.add(payment2);
         payments.add(payment3);
-        
+
         this.testPayment = payment1;
     }
 
     @Test
     void testAddPaymentCreatesNewPayment() {
         // Test: Add a new payment for an order
-        Payment payment = testPayment;
-        when(paymentRepository.save(payment)).thenReturn(payment);
+        // Fix: Mock findById to return null (no existing payment) and use any(Payment.class)
+        when(paymentRepository.findById(order.getId())).thenReturn(null);
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArgument(0));
 
         // Expected: Payment should be created and returned with correct ID
-        Payment result = paymentService.addPayment(this.order, payment.getMethod(), payment.getPaymentData());
-        verify(paymentRepository, times(1)).save(payment);
-        assertEquals(payment.getId(), result.getId());
+        Payment result = paymentService.addPayment(this.order, testPayment.getMethod(), testPayment.getPaymentData());
+
+        assertEquals(order.getId(), result.getId());
+        assertEquals(testPayment.getMethod(), result.getMethod());
+        assertEquals(PaymentStatus.PENDING.getDisplayName(), result.getStatus());
+        verify(paymentRepository, times(1)).save(any(Payment.class));
     }
 
     @Test
     void testAddPaymentReturnsNullForExistingPayment() {
         // Test: Try to add payment for an order that already has a payment
-        Payment payment = payments.get(1);
-        when(paymentRepository.findById(payment.getId())).thenReturn(payment);
+        // Fix: Create a payment with SUCCESS status and the order's ID
+        Payment successPayment = new Payment(
+            order.getId(),
+            PaymentMethod.VOUCHER.getDisplayName(),
+            PaymentStatus.SUCCESS.getDisplayName(),
+            new HashMap<>()
+        );
 
-        // Expected: Should return null since payment already exists
-        Payment result = paymentService.addPayment(this.order, payment.getMethod(), payment.getPaymentData());
+        when(paymentRepository.findById(order.getId())).thenReturn(successPayment);
+
+        Payment result = paymentService.addPayment(this.order, testPayment.getMethod(), testPayment.getPaymentData());
+
         assertNull(result);
-        verify(paymentRepository, times(0)).save(payment);
+        verify(paymentRepository, times(0)).save(any(Payment.class));
     }
 
     @Test
     void testSetStatusToRejectedUpdatesPaymentAndOrder() {
         // Test: Update a payment status to rejected
         Payment payment = payments.get(2);
-        when(paymentRepository.save(payment)).thenReturn(payment);
-        when(orderRepository.findById(payment.getId())).thenReturn(order);
-        when(orderRepository.save(order)).thenReturn(order);
 
-        // Expected: Payment status and order status should be updated
+        // Fix: Add missing mock for findById and use any(Payment.class) for save()
+        when(paymentRepository.findById(payment.getId())).thenReturn(payment);
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArgument(0));
+        when(orderRepository.findById(payment.getId())).thenReturn(order);
+        when(orderRepository.save(any(Order.class))).thenAnswer(i -> {
+            Order savedOrder = (Order)i.getArgument(0);
+            order.setStatus(savedOrder.getStatus());
+            return savedOrder;
+        });
+
         Payment result = paymentService.setStatus(payment, PaymentStatus.REJECTED.getDisplayName());
 
         assertAll("Payment and order should be updated correctly",
             () -> assertEquals(payment.getId(), result.getId()),
             () -> assertEquals(PaymentStatus.REJECTED.getDisplayName(), result.getStatus()),
-            () -> assertEquals(OrderStatus.FAILED.getValue(), order.getStatus())
+            () -> assertEquals("FAILED", order.getStatus())
         );
-        
+
         // Verify repository interactions
         verify(paymentRepository, times(1)).save(any(Payment.class));
         verify(orderRepository, times(1)).save(any(Order.class));
@@ -145,7 +161,6 @@ public class PaymentServiceImplTest {
         Payment payment = testPayment;
         when(paymentRepository.findById(payment.getId())).thenReturn(payment);
 
-        // Expected: Should throw IllegalArgumentException
         assertThrows(IllegalArgumentException.class, () -> {
             paymentService.setStatus(payment, "awokaowk");
         });
@@ -156,9 +171,9 @@ public class PaymentServiceImplTest {
     @Test
     void testSetStatusWithNonexistentPaymentThrowsException() {
         // Test: Try to update status for a non-existent payment
-        Payment payment = new Payment("woh", 
-                PaymentMethod.CASH_ON_DELIVERY.getDisplayName(), 
-                PaymentStatus.REJECTED.getDisplayName(), 
+        Payment payment = new Payment("woh",
+                PaymentMethod.CASH_ON_DELIVERY.getDisplayName(),
+                PaymentStatus.REJECTED.getDisplayName(),
                 new HashMap<>());
         when(paymentRepository.findById("woh")).thenReturn(null);
 
@@ -172,13 +187,12 @@ public class PaymentServiceImplTest {
 
     @Test
     void testGetPaymentByIdReturnsCorrectPayment() {
-        // Test: Find a payment by ID
+
         Payment payment = testPayment;
         when(paymentRepository.findById(payment.getId())).thenReturn(payment);
 
-        // Expected: Should return the correct payment with all properties
         Payment result = paymentService.getPayment(payment.getId());
-        
+
         assertAll("Payment properties should match",
             () -> assertEquals(payment.getId(), result.getId()),
             () -> assertEquals(payment.getMethod(), result.getMethod()),
@@ -189,20 +203,19 @@ public class PaymentServiceImplTest {
 
     @Test
     void testGetPaymentByNonexistentIdReturnsNull() {
-        // Test: Try to find a payment with a non-existent ID
+
         when(paymentRepository.findById("gemoy")).thenReturn(null);
-        
-        // Expected: Should return null
+
         Payment result = paymentService.getPayment("gemoy");
         assertNull(result);
     }
 
     @Test
     void testGetAllPaymentsReturnsAllPayments() {
-        // Test: Get all payments from repository
+
         when(paymentRepository.findAll()).thenReturn(payments);
 
-        // Expected: Should return all payments with correct count
+
         List<Payment> results = paymentService.getAllPayments();
         assertEquals(payments.size(), results.size());
     }
