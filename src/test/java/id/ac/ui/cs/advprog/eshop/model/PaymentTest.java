@@ -27,7 +27,7 @@ public class PaymentTest {
     @Test
     void testCreatePaymentValidStatus() {
         paymentData.put("voucherCode", "ESHOP1738");
-        Payment payment = new Payment("b94d0613-a74b-427e-8967-dc40abda13e7", "Voucher", "SUCCESS", paymentData);
+        Payment payment = new Payment("b94d0613-a74b-427e-8967-dc40abda13e7", "Voucher Payment", "SUCCESS", paymentData);
 
         assertEquals("SUCCESS", payment.getStatus());
     }
