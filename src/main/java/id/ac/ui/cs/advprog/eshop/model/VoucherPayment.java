@@ -14,5 +14,21 @@ public class VoucherPayment extends Payment {
     }
 
     public void setPaymentData(Map<String, String> paymentData) {
+        if (paymentData.isEmpty()) {
+            throw new IllegalArgumentException();
+        } else {
+            int nums = 0;
+            for (char c : paymentData.get("voucherCode").toCharArray()) {
+                if (Character.isDigit(c)) {
+                    nums++;
+                }
+            }
+
+            if (paymentData.get("voucherCode").length() == 16 && paymentData.get("voucherCode").startsWith("ESHOP") && nums == 8) {
+                setStatus(PaymentStatus.SUCCESS.getDisplayName());
+            } else {
+                setStatus(PaymentStatus.REJECTED.getDisplayName());
+            }
+        }
     }
 }
