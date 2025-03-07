@@ -67,4 +67,39 @@ public class CashPaymentTest {
         payment.setPaymentData(this.paymentData);
         assertEquals(PaymentStatus.REJECTED.getDisplayName(), payment.getStatus());
     }
+
+    @Test
+    void testFourArgumentConstructor() {
+        this.paymentData.put("address", "La La Land");
+        this.paymentData.put("deliveryFee", "10000");
+        CashPayment payment = new CashPayment("13652556-012a-4c07-b546-54eb1396d79b", 
+                                             PaymentMethod.CASH_ON_DELIVERY.getDisplayName(), 
+                                             PaymentStatus.SUCCESS.getDisplayName(),
+                                             this.paymentData);
+        assertEquals(PaymentStatus.SUCCESS.getDisplayName(), payment.getStatus());
+        assertEquals("La La Land", payment.getPaymentData().get("address"));
+        assertEquals("10000", payment.getPaymentData().get("deliveryFee"));
+    }
+    
+    @Test
+    void testNullAddressPaymentData() {
+        this.paymentData.put("address", null);
+        this.paymentData.put("deliveryFee", "4444444444444");
+        CashPayment payment = new CashPayment("13652556-012a-4c07-b546-54eb1396d79b", 
+                                             PaymentMethod.CASH_ON_DELIVERY.getDisplayName(), 
+                                             this.paymentData);
+        payment.setPaymentData(this.paymentData);
+        assertEquals(PaymentStatus.REJECTED.getDisplayName(), payment.getStatus());
+    }
+    
+    @Test
+    void testNullDeliveryFeePaymentData() {
+        this.paymentData.put("address", "The Bronx");
+        this.paymentData.put("deliveryFee", null);
+        CashPayment payment = new CashPayment("13652556-012a-4c07-b546-54eb1396d79b", 
+                                             PaymentMethod.CASH_ON_DELIVERY.getDisplayName(), 
+                                             this.paymentData);
+        payment.setPaymentData(this.paymentData);
+        assertEquals(PaymentStatus.REJECTED.getDisplayName(), payment.getStatus());
+    }
 }
