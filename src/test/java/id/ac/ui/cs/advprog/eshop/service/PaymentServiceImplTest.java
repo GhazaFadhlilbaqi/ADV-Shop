@@ -219,4 +219,90 @@ public class PaymentServiceImplTest {
         List<Payment> results = paymentService.getAllPayments();
         assertEquals(payments.size(), results.size());
     }
+
+    @Test
+    void testSetStatusToSuccessUpdatesPaymentAndOrder() {
+        Payment payment = payments.get(2);
+
+        when(paymentRepository.findById(payment.getId())).thenReturn(payment);
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArgument(0));
+        when(orderRepository.findById(payment.getId())).thenReturn(order);
+        when(orderRepository.save(any(Order.class))).thenAnswer(i -> {
+            Order savedOrder = (Order)i.getArgument(0);
+            order.setStatus(savedOrder.getStatus());
+            return savedOrder;
+        });
+
+        Payment result = paymentService.setStatus(payment, PaymentStatus.SUCCESS.getDisplayName());
+
+        assertAll("Payment and order should be updated correctly",
+            () -> assertEquals(payment.getId(), result.getId()),
+            () -> assertEquals(PaymentStatus.SUCCESS.getDisplayName(), result.getStatus()),
+            () -> assertEquals("SUCCESS", order.getStatus())
+        );
+
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        verify(orderRepository, times(1)).save(any(Order.class));
+    }
+
+    @Test
+    void testSetStatusToPendingUpdatesPaymentAndOrder() {
+        Payment payment = payments.get(2);
+
+        when(paymentRepository.findById(payment.getId())).thenReturn(payment);
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArgument(0));
+        when(orderRepository.findById(payment.getId())).thenReturn(order);
+        when(orderRepository.save(any(Order.class))).thenAnswer(i -> {
+            Order savedOrder = (Order)i.getArgument(0);
+            order.setStatus(savedOrder.getStatus());
+            return savedOrder;
+        });
+
+        Payment result = paymentService.setStatus(payment, PaymentStatus.PENDING.getDisplayName());
+
+        assertAll("Payment and order should be updated correctly",
+            () -> assertEquals(payment.getId(), result.getId()),
+            () -> assertEquals(PaymentStatus.PENDING.getDisplayName(), result.getStatus()),
+            () -> assertEquals("SUCCESS", order.getStatus())
+        );
+
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+        verify(orderRepository, times(1)).save(any(Order.class));
+    }
+
+    @Test
+    void testSetStatusWithOrderNotFoundThrowsException() {
+        Payment payment = testPayment;
+        
+        when(paymentRepository.findById(payment.getId())).thenReturn(payment);
+        when(orderRepository.findById(payment.getId())).thenReturn(null);
+
+        assertThrows(NullPointerException.class, () -> {
+            paymentService.setStatus(payment, PaymentStatus.REJECTED.getDisplayName());
+        });
+
+        verify(paymentRepository, times(0)).save(any(Payment.class));
+        verify(orderRepository, times(0)).save(any(Order.class));
+    }
+    
+    @Test
+    void testAddPaymentWithExistingPendingPayment() {
+
+        Payment pendingPayment = new Payment(
+            order.getId(),
+            PaymentMethod.VOUCHER.getDisplayName(),
+            PaymentStatus.PENDING.getDisplayName(),
+            new HashMap<>()
+        );
+
+        when(paymentRepository.findById(order.getId())).thenReturn(pendingPayment);
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArgument(0));
+
+        Payment result = paymentService.addPayment(this.order, testPayment.getMethod(), testPayment.getPaymentData());
+        
+        assertEquals(order.getId(), result.getId());
+        assertEquals(testPayment.getMethod(), result.getMethod());
+        assertEquals(PaymentStatus.PENDING.getDisplayName(), result.getStatus());
+        verify(paymentRepository, times(1)).save(any(Payment.class));
+    }
 }
