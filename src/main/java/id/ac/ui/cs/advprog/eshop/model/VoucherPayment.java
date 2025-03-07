@@ -34,6 +34,9 @@ public class VoucherPayment extends Payment {
 
     // Ensuring the voucher meets all requirements
     private boolean isValidVoucherCode(String voucherCode) {
+        if (voucherCode == null) {
+            return false;
+        }
         return hasCorrectLength(voucherCode) && 
                hasCorrectPrefix(voucherCode) && 
                hasCorrectDigitCount(voucherCode);
@@ -41,16 +44,19 @@ public class VoucherPayment extends Payment {
 
     // Length requirement checker
     private boolean hasCorrectLength(String voucherCode) {
-        return voucherCode.length() == REQUIRED_LENGTH;
+        return voucherCode != null && voucherCode.length() == REQUIRED_LENGTH;
     }
 
     // Prefix requirement checker
     private boolean hasCorrectPrefix(String voucherCode) {
-        return voucherCode.startsWith(REQUIRED_PREFIX);
+        return voucherCode != null && voucherCode.startsWith(REQUIRED_PREFIX);
     }
 
     // Digit count requirement checker
     private boolean hasCorrectDigitCount(String voucherCode) {
+        if (voucherCode == null) {
+            return false;
+        }
         int digitCount = 0;
         for (char c : voucherCode.toCharArray()) {
             if (Character.isDigit(c)) {
