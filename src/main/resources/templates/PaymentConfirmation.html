@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Confirmation</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link href="/css/stylesheet.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">ADV Shop</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/product/list">Product List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/order/create">Create Order</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/order/history">Order History</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Payment Successful</h2>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-success mb-4">
+          <h4 class="alert-heading">Thank you for your payment!</h4>
+          <p>Your payment has been processed successfully.</p>
+        </div>
+        
+        <div class="jumbotron">
+          <h3>Payment Details</h3>
+          <p><strong>Payment ID:</strong> <span th:text="${paymentId}"></span></p>
+          <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+          <p><strong>Order Status:</strong> <span th:text="${order.status}"></span></p>
+          <p><strong>Customer Name:</strong> <span th:text="${order.author}"></span></p>
+          <p><strong>Payment Date:</strong> <span th:text="${#dates.format(new java.util.Date(), 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        </div>
+        
+        <div class="mt-4">
+          <h3>Purchased Products</h3>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="product: ${order.products}">
+                  <td th:text="${product.productName}"></td>
+                  <td th:text="${product.productQuantity}"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="mt-4">
+          <a href="/order/history" class="btn btn-primary">Back to Order History</a>
+          <a href="/" class="btn btn-secondary ml-2">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</body>
+</html>
