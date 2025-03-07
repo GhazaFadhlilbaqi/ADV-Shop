@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Order History</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link href="/css/stylesheet.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">ADV Shop</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/product/list">Product List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/product/create">Create Product</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/order/create">Create Order</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/order/history">Order History</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Order History</h2>
+      </div>
+      <div class="card-body">
+        <form method="post" th:action="@{/order/history}" class="mb-4">
+          <div class="form-group">
+            <label for="authorName">Enter your name:</label>
+            <input type="text" class="form-control" id="authorName" name="authorName" th:value="${authorName}" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Find My Orders</button>
+        </form>
+        
+        <div th:if="${orders != null && !orders.empty}" class="mt-4">
+          <h3>Orders for <span th:text="${authorName}"></span></h3>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Order ID</th>
+                  <th>Order Time</th>
+                  <th>Products</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="order: ${orders}">
+                  <td th:text="${order.id}"></td>
+                  <td th:text="${#dates.format(new java.util.Date(order.orderTime), 'yyyy-MM-dd HH:mm')}"></td>
+                  <td>
+                    <ul>
+                      <li th:each="product : ${order.products}" th:text="${product.productName}"></li>
+                    </ul>
+                  </td>
+                  <td th:text="${order.status}"></td>
+                  <td>
+                    <a th:if="${order.status == 'WAITING_PAYMENT'}" 
+                       th:href="@{/order/pay/{id}(id=${order.id})}" 
+                       class="btn btn-info btn-sm">
+                      Pay Now
+                    </a>
+                    <span th:if="${order.status != 'WAITING_PAYMENT'}" class="btn btn-secondary btn-sm disabled">
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div th:if="${orders != null && orders.empty}" class="alert alert-info">
+          No orders found for <span th:text="${authorName}"></span>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</body>
+</html>
